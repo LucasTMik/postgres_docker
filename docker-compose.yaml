@@ -1,0 +1,38 @@
+version: "3"
+services: 
+  db: 
+    image: postgres
+    restart: always
+    ports: 
+      - "5432:5432"
+    networks: 
+      - backend
+      - frontend
+    environment: 
+      - POSTGRES_PASSWORD=postgres
+    volumes: 
+      - my-vol:/var/lib/postgresql/data
+  web: 
+    image: node-test
+    restart: always
+    ports:
+      - "3001:3001"
+    networks: 
+      - backend
+    depends_on:
+      - "db"
+volumes:
+  my-vol:
+
+networks:
+  backend: 
+    external: 
+      name: postgres-network
+  frontend: 
+    external: 
+      name: docker_default
+    
+
+# networks: 
+#   postgres-network:
+#     driver: bridge
